@@ -1,21 +1,34 @@
 import "./styles.css";
-import { RadialMenu, radialMenuOptions } from './radialMenu'
+import { RadialMenu } from './radialMenu'
 
-const options: radialMenuOptions = {
-  width: 400,
-  height: 400,
+const options = {
+  width: 600,
+  height: 600,
+  sliceSize: 200,
+  centerSize: 50,
   slices: [
     {
-      text: 'test 1'
+      label: 'Empty',
+      event: 'alert'
     },
     {
-      text: 'test 2'
+      label: 'Empty',
+      event: 'alert'
     },
     {
-      text: 'test 3'
+      label: 'Empty',
+      event: 'alert'
     },
     {
-      text: 'test 4'
+      label: 'SFG Homepage',
+      link: 'http://speciesfilegroup.org'
+    },
+    {
+      label: 'Bla bla'
+    },
+    {
+      label: 'TaxonWorks',
+      link: 'http://taxonworks.org'
     },
   ]
 }
