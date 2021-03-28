@@ -6,10 +6,12 @@ export type Slice = {
   radius?: number | unknown
   label: string
 }
+
 export type RadialMenuOptions = {
   height: number
   width: number
   sliceSize: number,
   centerSize: number,
+  centerButton?: Slice,
   slices: Array<Slice>
 }

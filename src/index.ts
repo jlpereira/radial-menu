@@ -27,8 +27,14 @@ const options = {
       label: 'Bla bla'
     },
     {
+      label: 'Bla bla'
+    },
+    {
       label: 'TaxonWorks',
       link: 'http://taxonworks.org'
+    },
+    {
+      label: 'Bla bla'
     },
   ]
 }

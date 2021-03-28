@@ -38,7 +38,7 @@ export class RadialMenu {
 
   private generateSlices (): Array<SVGElement> {
     const radiusSlice: number = 360 / this.slices.length
-    const svgPaths: Array<SVGElement> = []
+    const sliceElements: Array<SVGElement> = []
     const widthSize: number = this.width / 2
     const heightSize: number = this.height / 2
 
@@ -46,41 +46,50 @@ export class RadialMenu {
     let radiusEnd = radiusSlice
 
     this.slices.forEach((slice: Slice): void => {
-      console.log(`start: ${radiusStart}`)
-      console.log(`end: ${radiusEnd}`)
+      sliceElements.push(this.createSlice(slice, widthSize, heightSize, this.centerSize, this.sliceSize, radiusStart, radiusEnd))
 
-      const sliceElement = this.createSlice(this.describeArc(widthSize, heightSize, this.centerSize, this.sliceSize, radiusStart, radiusEnd))
-      svgPaths.push(slice.link ? this.createSVGLink(sliceElement, slice.link) : sliceElement)
-
-      svgPaths.push(this.generateLabel(widthSize, heightSize, this.sliceSize - this.centerSize, radiusStart + radiusSlice / 2, slice))
       radiusEnd = radiusEnd + radiusSlice
       radiusStart = radiusStart + radiusSlice
     })
 
-    return svgPaths
+    return sliceElements
   }
 
-  private generateLabel (x: number, y: number, distance: number, radius: number, slice: Slice) {
+  private createSlice (slice: Slice, x: number, y: number, startFrom: number, size: number, radiusStart: number, radiusEnd: number): SVGElement {
+    const elements: Array<SVGElement> = []
+    const sliceElement = this.createPath(this.describeArc(x, y, startFrom, size, radiusStart, radiusEnd))
+    const textElement = this.generateLabel(slice, x, y, (size / 2) + startFrom, radiusStart + (radiusEnd - radiusStart) / 2)
+    let svgGroup: SVGElement
+
+    elements.push(sliceElement)
+    elements.push(textElement)
+
+    svgGroup = this.createSVGGroup(elements)
+
+    return slice.link ? this.createSVGLink(svgGroup, slice.link) : svgGroup
+  }
+
+  private generateLabel (slice: Slice, x: number, y: number, distance: number, radius: number) {
     const coordinates = this.polarToCartesian(x, y, distance , radius)
     const SVGText = this.createSVGText(coordinates.x, coordinates.y, slice.label)
 
     return SVGText
   }
 
-  private createSlice (arcPath: string): SVGElement {
+  private createPath (arcPath: string): SVGElement {
     const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     pathElement.setAttribute('d', arcPath)
     pathElement.setAttribute('fill', 'gray')
-    pathElement.setAttribute('stroke', 'white')
-    pathElement.setAttribute('stroke-opacity', '1')
-    pathElement.setAttribute('stroke-width', '3')
-    pathElement.setAttribute('style', '3')
+    // pathElement.setAttribute('stroke', 'white')
+    // pathElement.setAttribute('stroke-opacity', '1')
+    // pathElement.setAttribute('stroke-width', '3')
+    // pathElement.setAttribute('style', '3')
     
 
     return pathElement
   }
 
-  private createSVGLink (nodeChild: SVGElement, link: string) {
+  private createSVGLink (nodeChild: SVGElement, link: string): SVGElement {
     const element = document.createElementNS('http://www.w3.org/2000/svg', 'a')
     element.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', link)
     element.append(nodeChild)
@@ -88,13 +97,23 @@ export class RadialMenu {
     return element
   }
 
-  private createSVGText (x: number, y: number, text: string) {
+  private createSVGText (x: number, y: number, text: string): SVGElement {
     const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text')
     textElement.textContent = text
     textElement.setAttribute('x', `${x}px`)
     textElement.setAttribute('y', `${y}px`)
     textElement.setAttribute('fill', 'white')
     return textElement
+  }
+
+  private createSVGGroup (elements: Array<SVGElement>): SVGElement {
+    const SVGElement =  document.createElementNS('http://www.w3.org/2000/svg', 'g')
+
+    elements.forEach((element: SVGElement) => {
+      SVGElement.appendChild(element)
+    })
+
+    return SVGElement
   }
 
   private describeArc (x: number, y: number, radius: number, spread: number, startAngle: number, endAngle: number): string {

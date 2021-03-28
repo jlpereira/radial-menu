@@ -1,3 +1,19 @@
-svg path:hover {
+svg g:hover {
   opacity: 0.7;
+}
+
+svg path {
+  stroke-width: 4px;
+  stroke-opacity: 1;
+  stroke: white;
+  paint-order: stroke;
+}
+
+svg text {
+  transform-box: fill-box;
+  transform: translateX(-50%);
+}
+
+body {
+  
 }
