@@ -1,3 +1,5 @@
+This repository is deprecate, the new version you can find it on https://github.com/SpeciesFileGroup/svg_radial_menu
+
 # radial-menu
 
 Empty project.
